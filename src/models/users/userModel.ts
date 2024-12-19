@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema( {
     user_type_id:{type: Number, default: 2},
     token:{type:String},
     isLoggedIn :{type:Boolean},
+    timezone:{type:String}
     
 });
 

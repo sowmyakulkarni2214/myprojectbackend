@@ -9,7 +9,10 @@ export interface User extends DocumentResult<User>, Document {
     created_at: string,
     updated_at: string,
     status:number,  
-    user_type_id:number 
+    user_type_id:number,
+    token:String,
+    isLoggedIn :Boolean,
+    timezone:String
 }
 
 export interface StatusType extends DocumentResult<StatusType>, Document {
