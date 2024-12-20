@@ -6,20 +6,28 @@ import userRouter from "../src/routes/route"
 import StatusTypeModel from './models/statusType/statusTypeModel';
 import contentTypeModel from './models/contentManagement/contentTypeModal'
 import expressSession from "express-session"
+import cors from "cors"
+
 const app = express();
-const port = 3001
+const port = 8080
 app.use(express.json())
 console.log("database connection")
 connectDatabase()
 
-
-
+app.use(
+  cors({
+    credentials:true,
+    origin:["http://192.168.1.21:8081", "http://localhost:3000", "http://localhost:8081"]
+    // origin:"*"
+  }
+))
+app.use("/api", userRouter);
 declare module 'express-session' {
   interface SessionData {
     token?: string;  // Optional token property (use ? if it's not always present)
   }
 }
-app.use('/api', userRouter)
+// app.use('/api', userRouter)
   app.get("/api/config/statustype", async (req, res) => {
     await StatusTypeModel.deleteMany({});
     await StatusTypeModel.create({ status_type: "USER ACTIVE", status_type_id: 1 });
@@ -47,7 +55,18 @@ app.use('/api', userRouter)
 // .catch(err => {
 //     console.error("Database connection error:", err);
 // });
+ 
+declare module 'express' {
+  export interface Request {
+    //  user?: User;  You can replace `any` with a more specific type if available
+    user?: any; // You can replace `any` with a more specific type if available
+  }
+}
+
+
+console.log("this is a test", );
 
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
   })
+
