@@ -7,6 +7,8 @@ import StatusTypeModel from './models/statusType/statusTypeModel';
 import contentTypeModel from './models/contentManagement/contentTypeModal'
 import expressSession from "express-session"
 import cors from "cors"
+import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk';
+import NotificationTokenModel from './models/notification/notification';
 
 const app = express();
 const port = 8080
@@ -17,7 +19,7 @@ connectDatabase()
 app.use(
   cors({
     credentials:true,
-    origin:["http://192.168.1.21:8081", "http://localhost:3000", "http://localhost:8081"]
+    origin:["http://192.168.1.16:8081", "http://localhost:3000", "http://localhost:8081"]
     // origin:"*"
   }
 ))
@@ -27,6 +29,7 @@ declare module 'express-session' {
     token?: string;  // Optional token property (use ? if it's not always present)
   }
 }
+const expo = new Expo();
 // app.use('/api', userRouter)
   app.get("/api/config/statustype", async (req, res) => {
     await StatusTypeModel.deleteMany({});
@@ -62,6 +65,83 @@ declare module 'express' {
     user?: any; // You can replace `any` with a more specific type if available
   }
 }
+
+app.post("/send-notification", async(req:any, res:any) => {
+  const { pushToken, user_id } = req.body;
+// Validate the Expo push token
+if (!Expo.isExpoPushToken(pushToken)) {
+  return res.status(400).send('Invalid push token');
+}
+
+// Create the push notification message
+const messages: ExpoPushMessage[] = [{
+  to: pushToken,
+  sound: 'default',
+  title: "welcome",
+  body: "Welcome to the app",
+  data: { someData: 'some data' },
+}];
+
+try {
+  // Split the messages into chunks (Expo allows sending notifications in chunks)
+  const chunks = expo.chunkPushNotifications(messages);
+  const tickets: ExpoPushTicket[] = [];
+
+  // Send the notifications in chunks
+  for (let chunk of chunks) {
+    try {
+      const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+      tickets.push(...ticketChunk);
+    } catch (error) {
+      console.error('Error sending push notifications:', error);
+    }
+  }
+
+  res.status(200).send(tickets);
+} catch (error) {
+  console.error('Error sending notification:', error);
+  res.status(500).send('Internal server error');
+}
+})
+
+app.post('/api/send-notification', async (req:any, res:any) => {
+  const { pushToken, title, message }: any = req.body;
+
+  // Validate the Expo push token
+  if (!Expo.isExpoPushToken(pushToken)) {
+    return res.status(400).send('Invalid push token');
+  }
+
+  // Create the push notification message
+  const messages: ExpoPushMessage[] = [{
+    to: pushToken,
+    sound: 'default',
+    title: title,
+    body: message,
+    data: { someData: 'some data' },
+  }];
+
+  try {
+    // Split the messages into chunks (Expo allows sending notifications in chunks)
+    const chunks = expo.chunkPushNotifications(messages);
+    const tickets: ExpoPushTicket[] = [];
+
+    // Send the notifications in chunks
+    for (let chunk of chunks) {
+      try {
+        const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        tickets.push(...ticketChunk);
+      } catch (error) {
+        console.error('Error sending push notifications:', error);
+      }
+    }
+
+    res.status(200).send(tickets);
+  } catch (error) {
+    console.error('Error sending notification:', error);
+    res.status(500).send('Internal server error');
+  }
+});
 
 
 console.log("this is a test", );

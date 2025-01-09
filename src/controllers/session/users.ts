@@ -3,7 +3,10 @@ import {NextFunction, Request, Response} from "express"
 import { DateTime } from "luxon"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import getisotime from "../../../src/utils"
+// import getisotime from "../../../utils/utils"
+import NotificationTokenModel from "../../models/notification/notification"
+import getisotime from "../../utils/utils"
+import sendNotifications from "../../utils/sendNotification"
 
 export const getusers = async(req:Request, res:Response) => {
     try {
@@ -112,11 +115,18 @@ export const signin = async(req:Request, res:Response)=>{
     }
     console.log(token, "kkkkk")
     let updated = await User.findByIdAndUpdate(user?._id, { isLoggedIn: true, updated_at: date, updated_by: user?._id, time_zone: timezone, token }, { new: true })
-
+    let pushToken:any = await NotificationTokenModel.findOne({user_id:updated?._id})
+    let title = "Welcome"
+    let message = "welcome to my-app"
+    let notification = await sendNotifications({pushToken, title, message})
+   
      res.status(200).json({message:"user signed in successfully", result:updated})
+    
+   
   } catch (error) {
      res.status(500).json({message:"something wrong could not sign in"})
   }
 }
+
 
 

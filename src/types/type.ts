@@ -43,3 +43,10 @@ export interface ContentPointType extends DocumentResult<ContentPointType>, Docu
     created_at:string,
     updated_at:string
 }
+
+export interface NotificationTokenType extends DocumentResult<NotificationTokenType>, Document{
+    user_id:string,
+    token:string,
+    created_at:string,
+    updated_at:string,
+}

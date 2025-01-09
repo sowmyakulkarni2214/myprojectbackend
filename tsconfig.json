@@ -108,7 +108,7 @@
   },
   "include": [
     "src/**/*.ts"
-, "index.ts", "src/models/contentManagement"  ],
+, "index.ts", "src/models/contentManagement", "src/utils/utils.ts"  ],
   "exclude": [
     "node_modules"
   ]

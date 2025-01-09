@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import mongoose from "mongoose";
-import { User} from "../../types/type";
+import { NotificationTokenType, User} from "../../types/type";
 
 
 const userSchema = new mongoose.Schema( {
@@ -29,4 +29,7 @@ userSchema.pre("save", function setDateTime(next)
 
 const UserModel = mongoose.model<User>("User", userSchema)
 export default UserModel
+
+
+
 
