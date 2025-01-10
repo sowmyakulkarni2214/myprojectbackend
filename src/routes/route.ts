@@ -1,5 +1,5 @@
 import express from "express"
-import { createuser, getusers, updateuser, deleteuser, signin, addToken} from "../controllers/session/users";
+import { createuser, getusers, updateuser, deleteuser, signin} from "../controllers/session/users";
 import { addContent, updateContent, deleteContent, getContent, updateOrder} from "../controllers/content/contentmangement";
 // import auth from "../middleware/auth";
 const router = express.Router();
@@ -23,6 +23,6 @@ router.post("/deletecontent", deleteContent)
 router.post("/getcontent", getContent)
 router.post("/updateorder", updateOrder)
 
-router.post("/addToken", addToken)
+// router.post("/addToken", addToken)
 
 export default router;

@@ -1,4 +1,4 @@
-import express from 'express';  // Correct ES Module import
+import express from 'express';  
 import { SessionData } from 'express-session';
 import os from "os"
 import connectDatabase from "../src/database/database"
