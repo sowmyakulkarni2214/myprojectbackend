@@ -14,11 +14,14 @@
   },
   "name": "nodepractice",
   "version": "1.0.0",
-  "build" : "npx tsc",
   "main": "src/index.ts",
-  "start": "node dist/index.ts",
+ 
   "scripts": {
-    "dev": "nodemon --exec ts-node  src/index.ts"
+    "dev": "nodemon --exec ts-node  src/index.ts",
+    "start": "node dist/index.ts",
+    "build":"npx tsc"
+  
+   
   },
   "author": "sowmya",
   "license": "ISC",
