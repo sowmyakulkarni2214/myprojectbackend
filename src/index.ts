@@ -19,7 +19,7 @@ connectDatabase()
 app.use(
   cors({
     credentials:true,
-    origin:["http://192.168.1.16:8081", "http://localhost:3000", "http://localhost:8081"]
+    origin:["http://192.168.1.25:8081", "http://localhost:3000", "http://localhost:8081"]
     // origin:"*"
   }
 ))
@@ -150,3 +150,4 @@ console.log("this is a test", );
     console.log(`Example app listening on port ${port}`)
   })
 
+ 
